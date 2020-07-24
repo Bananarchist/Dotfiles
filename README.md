@@ -2,14 +2,21 @@
 
 ## vim
 Add `:source <repo>/vimrc` to ~/.vim/vimrc
+
 Uses Vim-plug
 
 ## tmux
-Add `POWERLINECONF="<wheretfeveritis>"` to ~/.tmux.conf
-Add `source "<repo>/tmux.conf"` to ~/.tmux.conf
+Add the follow to ~/.tmux.conf:
+```
+POWERLINECONF="<wheretfeveritis>"
+source "<repo>/tmux.conf"
+``` 
 Uses powerline
 
 ## zsh
-Add `export ZSH="<wheretfeveritis>"` to ~/.zshrc
-Add `source <repo>/zshrc` to ~/.zshrc
+Add the following to ~/.zshrc:
+```
+export ZSH="<wheretfeveritis>"
+source <repo>/zshrc
+```
 Uses Powerlevel10k and oh-my-zsh
