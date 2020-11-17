@@ -29,3 +29,6 @@ let g:ale_sign_warning = '⚠️'
 let g:ale_sign_info = '🔎' 
 let g:ale_change_sign_column_color = 0 
 let g:ale_set_highlights = 0
+"CSV options
+let g:csv_default_delim = ','
+let g:csv_no_conceal = 1
