@@ -1,26 +1,33 @@
 syntax enable
-set scrolloff=5   " Scroll three lines from end
-set relativenumber " Use relative line numbers
-set number " Use cursor line number
+set scrolloff=5				" Scroll three lines from end
+set relativenumber			" Use relative line numbers
+set number 				" Use cursor line number
 cnoremap jk <C-C>
 filetype plugin indent on
 autocmd FileType elm setlocal shiftwidth=2 tabstop=2
 set wrap
-set tabstop=4
 set wildmenu
 set showmatch
 set incsearch
 set hlsearch
 call plug#begin('~/.vim/plugged')
-	Plug 'vim-airline/vim-airline'
-	Plug 'vim-airline/vim-airline-themes'
 	Plug 'sheerun/vim-polyglot'
 	Plug 'dense-analysis/ale'
 	Plug 'mattn/emmet-vim'
 call plug#end()
-"Airline options
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#ale#enabled = 1
+
+"statusline
+set laststatus=2
+set statusline=
+set statusline+=%n			" buffer number
+set statusline+=:\ 
+set statusline+=%f			" filename
+set statusline+=%M%R			" modified/readonly
+set statusline+=%=			" right align
+set statusline+=%l			" line
+set statusline+=:
+set statusline+=%c			" column
+
 "Ale options
 "let g:ale_lint_on_text_changed = 'never'
 "let g:ale_lint_on_insert_leave = 1
