@@ -41,7 +41,7 @@ set statusline+=%=			" right align
 set statusline+=%{AleStatus()}
 set statusline+=%2*
 set statusline+=\ 
-set statusline+=[%{&fileformat}]
+set statusline+=[%{&filetype}.%{&fileformat}]
 set statusline+=\ 
 set statusline+=%n			" buffer number
 set statusline+=:
