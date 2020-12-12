@@ -8,10 +8,8 @@ Uses Vim-plug
 ## tmux
 Add the follow to ~/.tmux.conf:
 ```
-POWERLINECONF="<wheretfeveritis>"
 source "<repo>/tmux.conf"
 ``` 
-Uses powerline
 
 ## zsh
 Add the following to ~/.zshrc:
