@@ -81,19 +81,13 @@ hi TabLine ctermfg=247 ctermbg=239
 hi TabLineFill ctermfg=232 ctermbg=232
 set tabline=%!Tabline()
 
-"Mode indicators/opts
-if version >= 700
-	au InsertEnter * set nocursorline nocursorcolumn
-	au InsertLeave * set cursorline cursorcolumn
-endif
- 
-
 "Ale options
 "let g:ale_lint_on_text_changed = 'never'
 "let g:ale_lint_on_insert_leave = 1
-let g:ale_sign_error = '🔴'
-let g:ale_sign_warning = '🟠'
-let g:ale_sign_info = '🔎' 
+"let g:ale_sign_error = '🔴'
+"let g:ale_sign_warning = '🟠'
+"let g:ale_sign_info = '🔎' 
+let g:ale_set_sign = 0
 let g:ale_change_sign_column_color = 0 
 let g:ale_set_highlights = 0
 highlight clear SignColumn
