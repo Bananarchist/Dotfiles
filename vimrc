@@ -1,13 +1,12 @@
 syntax enable
-set scrolloff=5				" Scroll three lines from end
+set scrolloff=3				" Scroll three lines from end
 set relativenumber			" Use relative line numbers
 set number 				" Use cursor line number
+set signcolumn=number
 cnoremap jk <C-C>
 filetype plugin indent on
 autocmd FileType elm setlocal shiftwidth=2 tabstop=2
 set wrap
-set cursorline				" But only for command mode
-set cursorcolumn 			" But only for command mode
 set wildmenu
 set showmatch
 set incsearch
@@ -15,7 +14,6 @@ set hlsearch
 call plug#begin('~/.vim/plugged')
 	Plug 'sheerun/vim-polyglot'
 	Plug 'dense-analysis/ale'
-	Plug 'mattn/emmet-vim'
 call plug#end()
 
 " statusline
@@ -98,6 +96,9 @@ let g:ale_sign_warning = '🟠'
 let g:ale_sign_info = '🔎' 
 let g:ale_change_sign_column_color = 0 
 let g:ale_set_highlights = 0
+highlight clear SignColumn
+highlight clear ALEWarningSign
+highlight clear ALEErrorSign
 "CSV options
 let g:csv_default_delim = ','
 let g:csv_no_conceal = 1
