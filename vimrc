@@ -90,9 +90,6 @@ set tabline=%!Tabline()
 let g:ale_set_sign = 0
 let g:ale_change_sign_column_color = 0 
 let g:ale_set_highlights = 0
-highlight clear SignColumn
-highlight clear ALEWarningSign
-highlight clear ALEErrorSign
 "CSV options
 let g:csv_default_delim = ','
 let g:csv_no_conceal = 1
