@@ -1,19 +1,27 @@
-syntax enable
+" Mainsettings?
 set scrolloff=3				" Scroll three lines from end
 set relativenumber			" Use relative line numbers
 set number 				" Use cursor line number
 set signcolumn=number
-cnoremap jk <C-C>
-filetype plugin indent on
-autocmd FileType elm setlocal shiftwidth=2 tabstop=2
 set wrap
 set wildmenu
 set showmatch
 set incsearch
 set hlsearch
+syntax enable
+"cnoremap jk <C-C>			" I don't remember what this does
+filetype plugin indent on
+"autocmd FileType elm setlocal shiftwidth=2 tabstop=2
+
+" Plugin setup
+let g:ale_disable_lsp = 1
+let g:polyglot_disabled = ['go.plugin', 'elm.plugin']
 call plug#begin('~/.vim/plugged')
 	Plug 'sheerun/vim-polyglot'
 	Plug 'dense-analysis/ale'
+	Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+	Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+	Plug 'vim-test/vim-test'
 call plug#end()
 
 " statusline
@@ -49,7 +57,7 @@ set statusline+=%03l			" line
 set statusline+=:
 set statusline+=%02c			" column
 
-"tabline
+" tabline
 function! Tabline()
 	let t = ''
 	for i in range(tabpagenr('$'))
@@ -81,7 +89,7 @@ hi TabLine ctermfg=247 ctermbg=239
 hi TabLineFill ctermfg=232 ctermbg=232
 set tabline=%!Tabline()
 
-"Ale options
+" Ale options
 "let g:ale_lint_on_text_changed = 'never'
 "let g:ale_lint_on_insert_leave = 1
 "let g:ale_sign_error = '🔴'
@@ -90,6 +98,24 @@ set tabline=%!Tabline()
 let g:ale_set_sign = 0
 let g:ale_change_sign_column_color = 0 
 let g:ale_set_highlights = 0
-"CSV options
+
+" CSV options
 let g:csv_default_delim = ','
 let g:csv_no_conceal = 1
+
+" CoC options
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gi <Plug>(coc-implementations)
+nmap <silent> gl <Plug>(coc-format)
+nmap <silent> gr <Plug>(coc-references)
+nnoremap <silent> gh :call<SID>show_documentation()<CR>
+inoremap <silent><expr> <TAB> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<TAB>\<c-r>=coc#on_enter()\<CR>"
+function! s:show_documentation()
+	if(index(['vim','help'], &filetype) >= 0)
+		execute 'h '.expand('<cword>')
+	elseif (coc#rpc#ready())
+		call CocActionAsync('doHover')
+	else 
+		execute '!' ; &keywordprg . " " . expand('<cword>')
+	endif
+endfunction
