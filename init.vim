@@ -37,7 +37,10 @@ require'lspsaga'.init_lsp_saga({
 	warn_sign = '🟠',
 	hint_sign = '?',
 	infor_sign = ';',
-
+	code_action_prompt = {
+		enable = false,
+		sign = false,
+	},
 })
 local lspconfig = require 'lspconfig'
 local on_attach = function(client, bufnr)
