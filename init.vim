@@ -12,6 +12,7 @@ set hlsearch
 syntax enable
 filetype plugin indent on
 
+" Plugins
 call plug#begin(stdpath('data') . '/plugged')
 	Plug 'neovim/nvim-lspconfig'
 	Plug 'glepnir/lspsaga.nvim'
@@ -20,7 +21,8 @@ call plug#begin(stdpath('data') . '/plugged')
 call plug#end()
 
 
-lua <<EOF
+" IDE setup
+lua << EOF
 require'nvim-treesitter.configs'.setup {
 	ensure_installed = { "elm", "go", "html", "css", "javascript", "vim", "lua", "yaml", "bash", "json" },
 	ignore_install = {},
@@ -38,8 +40,25 @@ require'lspsaga'.init_lsp_saga({
 
 })
 local lspconfig = require 'lspconfig'
-lspconfig.elmls.setup{}
-lspconfig.gopls.setup{}
+local on_attach = function(client, bufnr)
+	local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+
+	local opts = { noremap=true, silent=true }
+	buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+	buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+	buf_set_keymap('n', 'gh', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+end
+
+local servers = { 'elmls', 'gopls' }
+for _, lsp in ipairs(servers) do
+	lspconfig[lsp].setup {
+		on_attach = on_attach,
+		flags = {
+			debounce_text_changes = 150,
+		}
+	}
+end
+
 require'formatter'.setup({
 	filetype = {
 		elm = {
@@ -62,23 +81,13 @@ require'formatter'.setup({
 		},
 	}
 })
-local opts = { noremap=true, silent=true }
-buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+
 EOF
 
-nnoremap <silent> gh <cmd>lua require('lspsaga.signaturehelp').signature_help()<CR>
-nnoremap <silent> <C-n> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>
-nnoremap <silent> <C-p> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>
 
 nnoremap <silent> gl <cmd>Format<CR>
-nnoremap <silent> gd <cmdp
+nnoremap <silent>K :Lspsaga hover_doc<CR>
 
-"nnoremap <silent> gd <cmd>lua require('vim.lsp.buf.definition()<CR>', opts)
-"buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-	"nmap <silent> gd <Plug>(coc-definition)
-	"nmap <silent> gi <Plug>(coc-implementations)
-	"nmap <silent> gl <Plug>(coc-format)
-	"nmap <silent> gr <Plug>(coc-references)
 
 " statusline
 hi User1 ctermfg=81 ctermbg=235
@@ -102,7 +111,33 @@ set statusline+=%02c			" column
 hi TabLineSel ctermfg=202 ctermbg=232
 hi TabLine ctermfg=247 ctermbg=239
 hi TabLineFill ctermfg=232 ctermbg=232
-"set tabline=%!Tabline()
+function Tabline()
+	let t = ''
+	for i in range(tabpagenr('$'))
+		" to do: shorten filenames longer than some number
+		let tab = i+1
+		let window_number = tabpagewinnr(tab)
+		let window_list = tabpagewinnr(tab, "$")
+		let buffer_list = tabpagebuflist(tab)
+		let buffer_number = buffer_list[window_number-1]
+		let buffer_name = bufname(buffer_number)
+		let is_modified = getbufvar(buffer_number, "&mod")
+		let wintext = '' "'' . (window_list > 1 ? ' (' . (window_list - 1) . '...)' : '')
+		let tabname = buffer_name != '' ? fnamemodify(buffer_name, ':.') : 'Untitled'
+		if is_modified 
+			let tabname .= '+'
+		endif
+
+		let t .= '%' . tab . 'T'
+		let t .= (tab == tabpagenr() ? '%#TabLineSel#' : '%#TabLine#')
+		" let t .= tab . '#'
+		let t .= ' ' . tabname .  wintext . ' ' 
+
+	endfor
+	let t .= '%#TabLineFill#'
+	return t
+endfunction
+set tabline=%!Tabline()
 
 " CSV options
 let g:csv_default_delim = ','

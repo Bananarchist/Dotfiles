@@ -4,6 +4,7 @@ set relativenumber			" Use relative line numbers
 set number 				" Use cursor line number
 set signcolumn=number
 set wrap
+set showcmd
 set wildmenu
 set showmatch
 set incsearch
