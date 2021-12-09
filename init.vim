@@ -15,23 +15,31 @@ filetype plugin indent on
 " Plugins
 call plug#begin(stdpath('data') . '/plugged')
 	Plug 'neovim/nvim-lspconfig'
-	Plug 'glepnir/lspsaga.nvim'
+	" Plug 'glepnir/lspsaga.nvim'
 	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+	" Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 	Plug 'mhartington/formatter.nvim'
+	" Plug 'ms-jpq/coq_nvim', { 'branch': 'coq' }
 call plug#end()
 
+let g:coq_settings = { 'auto_start': 'shut-up' }
+let g:python3_host_prog='/usr/local/bin/python3.9'
 
 " IDE setup
 lua << EOF
 require'nvim-treesitter.configs'.setup {
-	ensure_installed = { "elm", "go", "html", "css", "javascript", "vim", "lua", "yaml", "bash", "json" },
+	ensure_installed = { "elm", "go", "html", "haskell", "css", "javascript", "vim", "lua", "yaml", "bash", "json" },
 	ignore_install = {},
+	indent = { 
+		enable = true
+	},
 	highlight = {
-		enabled = true,
+		enable = true,
 		disable = {},
-		additional_vim_regex_highlighting = false,
+		additional_vim_regex_highlighting = true,
 	},
 }
+--[[
 require'lspsaga'.init_lsp_saga({
 	error_sign = '🔴',
 	warn_sign = '🟠',
@@ -42,7 +50,9 @@ require'lspsaga'.init_lsp_saga({
 		sign = false,
 	},
 })
+--]]
 local lspconfig = require 'lspconfig'
+--local coq = require 'coq'
 local on_attach = function(client, bufnr)
 	local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
 
@@ -50,18 +60,34 @@ local on_attach = function(client, bufnr)
 	buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
 	buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
 	buf_set_keymap('n', 'gh', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+	buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+	buf_set_keymap('n', 'gl', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+	buf_set_keymap('n', 'ge', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
 end
 
 local servers = { 'elmls', 'gopls' }
 for _, lsp in ipairs(servers) do
-	lspconfig[lsp].setup {
+	lspconfig[lsp].setup({
 		on_attach = on_attach,
 		flags = {
 			debounce_text_changes = 150,
 		}
-	}
+	})
 end
 
+lspconfig['hls'].setup({
+	on_attach = on_attach,
+	flags = {
+		debounce_text_changes = 150,
+	},
+	settings = {
+		haskell = {
+			formattingProvider = "stylish-haskell"
+		}
+	}
+})
+
+--[[
 require'formatter'.setup({
 	filetype = {
 		elm = {
@@ -82,14 +108,26 @@ require'formatter'.setup({
 				}
 			end
 		},
+		haskell = {
+			function() 
+				return {
+					exe = "hindent",
+					stdin = true
+				}
+			end
+		}
 	}
 })
-
+--]]
 EOF
 
 
-nnoremap <silent> gl <cmd>Format<CR>
-nnoremap <silent>K :Lspsaga hover_doc<CR>
+"nnoremap <silent> gl <cmd>Format<CR>
+" nnoremap <silent>K :Lspsaga hover_doc<CR>
+"nmap <silent> gd <Plug>(coc-definition)
+"nmap <silent> gi <Plug>(coc-implementations)
+"nmap <silent> gl <Plug>(coc-format)
+"nmap <silent> gr <Plug>(coc-references)
 
 
 " statusline
