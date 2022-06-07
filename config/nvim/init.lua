@@ -135,6 +135,9 @@ lspconfig.hls.setup({
 lspconfig.clojure_lsp.setup({
   on_attach = on_attach
 })
+lspconfig.golangci_lint_ls.setup({
+  on_attach = on_attach,
+})
 
 lspconfig.cssls.setup({
   on_attach = on_attach
