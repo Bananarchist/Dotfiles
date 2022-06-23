@@ -1,8 +1,7 @@
 " Mainsettings?
 set scrolloff=3				" Scroll three lines from end
-set relativenumber			" Use relative line numbers
-set number 				" Use cursor line number
-set signcolumn=number
+set rnu							" Use relative line numbers
+set signcolumn=yes
 set wrap
 set showcmd
 set wildmenu
@@ -10,9 +9,27 @@ set showmatch
 set incsearch
 set hlsearch
 syntax enable
-"cnoremap jk <C-C>			" I don't remember what this does
 filetype plugin indent on
 "autocmd FileType elm setlocal shiftwidth=2 tabstop=2
+hi CursorLine term=bold cterm=bold ctermbg=none
+set cursorline
+hi CursorLineNr term=reverse cterm=reverse ctermbg=none
+hi CursorColumn term=standout cterm=standout ctermbg=none
+hi SignColumn ctermbg=235
+hi LineNrAbove ctermfg=81 ctermbg=235
+hi LineNrBelow ctermfg=49 ctermbg=235
+
+fu! Crosshairs()
+	if &cursorline && &cursorcolumn
+		hi CursorLine term=bold cterm=bold ctermbg=none
+		set nocursorline
+		set nocursorcolumn
+	else
+		hi CursorLine term=bold,underline cterm=bold,underline ctermbg=none
+		set cursorline
+		set cursorcolumn
+	endif
+endfunction
 
 " Plugin setup
 let g:ale_disable_lsp = 1
@@ -93,12 +110,19 @@ set tabline=%!Tabline()
 " Ale options
 "let g:ale_lint_on_text_changed = 'never'
 "let g:ale_lint_on_insert_leave = 1
-"let g:ale_sign_error = '🔴'
-"let g:ale_sign_warning = '🟠'
-"let g:ale_sign_info = '🔎' 
-let g:ale_set_sign = 0
-let g:ale_change_sign_column_color = 0 
-let g:ale_set_highlights = 0
+hi ALEError cterm=none
+hi ALEWarning cterm=none
+hi ALEInfo cterm=none
+hi ALEErrorSign ctermbg=none
+hi ALEWarningSign ctermbg=none
+hi ALEInfoSign ctermbg=none
+hi ALEStyleErrorSign ctermbg=none
+hi ALEStyleWarningSign ctermbg=none
+let g:ale_sign_error = '❗️'
+let g:ale_sign_warning = '⚠️'
+let g:ale_sign_info = '🔎' 
+let g:ale_set_highlights=0
+
 
 " CSV options
 let g:csv_default_delim = ','
